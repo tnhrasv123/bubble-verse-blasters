@@ -1,0 +1,89 @@
+
+name: BubbleGumSimulator
+version: '${project.version}'
+main: com.bubblegum.BubbleGumSimulator
+api-version: '1.21'
+authors: [YourName]
+description: A Minecraft implementation of Bubble Gum Simulator from Roblox
+depend: [PlaceholderAPI, Vault]
+softdepend: []
+
+commands:
+  bubblegum:
+    description: Main command for Bubble Gum Simulator
+    aliases: [bg, bubble, gum]
+    usage: /<command> [subcommand]
+  bubble:
+    description: Manage your bubbles
+    usage: /<command> [blow/sell/info]
+  pets:
+    description: Manage your pets
+    usage: /<command> [list/info/equip/unequip]
+  eggs:
+    description: Manage your eggs
+    usage: /<command> [buy/open/list]
+  bgsshop:
+    description: Open the Bubble Gum Simulator shop
+    aliases: [bgshop, gumshop]
+    usage: /<command>
+  bgsstats:
+    description: View your Bubble Gum Simulator stats
+    aliases: [bgstats, gumstats]
+    usage: /<command> [player]
+  bgsworlds:
+    description: Teleport between Bubble Gum Simulator worlds
+    aliases: [bgworlds, gumworlds]
+    usage: /<command> [world]
+
+permissions:
+  bubblegum.*:
+    description: Gives access to all Bubble Gum Simulator commands
+    default: op
+    children:
+      bubblegum.admin: true
+      bubblegum.player: true
+  bubblegum.admin:
+    description: Gives access to admin commands
+    default: op
+    children:
+      bubblegum.player: true
+      bubblegum.give: true
+      bubblegum.reload: true
+      bubblegum.reset: true
+  bubblegum.player:
+    description: Gives access to player commands
+    default: true
+    children:
+      bubblegum.bubble: true
+      bubblegum.pets: true
+      bubblegum.eggs: true
+      bubblegum.shop: true
+      bubblegum.stats: true
+      bubblegum.worlds: true
+  bubblegum.bubble:
+    description: Allows using bubble commands
+    default: true
+  bubblegum.pets:
+    description: Allows using pet commands
+    default: true
+  bubblegum.eggs:
+    description: Allows using egg commands
+    default: true
+  bubblegum.shop:
+    description: Allows using shop commands
+    default: true
+  bubblegum.stats:
+    description: Allows using stats commands
+    default: true
+  bubblegum.worlds:
+    description: Allows using world commands
+    default: true
+  bubblegum.give:
+    description: Allows giving items to players
+    default: op
+  bubblegum.reload:
+    description: Allows reloading the plugin
+    default: op
+  bubblegum.reset:
+    description: Allows resetting player data
+    default: op

@@ -1,0 +1,243 @@
+
+# BubbleGumSimulator Configuration
+
+# Plugin settings
+settings:
+  debug-mode: false
+  language: 'en'
+  save-interval: 300 # In seconds
+  database:
+    type: 'yaml' # 'yaml' or 'mysql'
+    mysql:
+      host: 'localhost'
+      port: 3306
+      database: 'bubblegum'
+      username: 'root'
+      password: 'password'
+      table-prefix: 'bgs_'
+
+# Economy settings
+economy:
+  starting-coins: 500
+  starting-gems: 0
+  coin-symbol: '$'
+  gem-symbol: '⬙'
+  
+# Bubble mechanics
+bubbles:
+  # How long it takes to blow a bubble (in ticks)
+  blow-time: 20
+  # Base growth rate of bubbles
+  growth-rate: 0.05
+  # Maximum size for default bubbles
+  max-size: 10.0
+  # Base value of bubbles (coins per size)
+  base-value: 5
+  # How bubble visuals are displayed
+  display:
+    particle: 'CLOUD'
+    color: 'WHITE'
+    effect-radius: 1.0
+
+# Gum types
+gum-types:
+  regular:
+    name: 'Regular Gum'
+    growth-rate: 1.0
+    max-size: 10.0
+    value-multiplier: 1.0
+    required-level: 0
+    cost:
+      coins: 500
+      gems: 0
+    color: 'WHITE'
+    
+  sparkle:
+    name: 'Sparkle Gum'
+    growth-rate: 1.2
+    max-size: 12.0
+    value-multiplier: 1.5
+    luck-boost: 0.1
+    required-level: 5
+    cost:
+      coins: 2500
+      gems: 10
+    color: 'AQUA'
+    
+  rainbow:
+    name: 'Rainbow Gum'
+    growth-rate: 1.5
+    max-size: 15.0
+    value-multiplier: 2.0
+    required-level: 10
+    cost:
+      coins: 10000
+      gems: 50
+    color: 'LIGHT_PURPLE'
+    
+  void:
+    name: 'Void Gum'
+    growth-rate: 2.0
+    max-size: 20.0
+    value-multiplier: 3.0
+    required-level: 20
+    cost:
+      coins: 50000
+      gems: 100
+    color: 'DARK_PURPLE'
+
+# Backpack upgrades
+backpacks:
+  basic:
+    name: 'Basic Backpack'
+    capacity: 10
+    cost:
+      coins: 0
+      gems: 0
+    
+  advanced:
+    name: 'Advanced Backpack'
+    capacity: 50
+    cost:
+      coins: 5000
+      gems: 0
+      
+  mega:
+    name: 'Mega Backpack'
+    capacity: 250
+    cost:
+      coins: 25000
+      gems: 50
+      
+  infinity:
+    name: 'Infinity Backpack'
+    capacity: 1000
+    cost:
+      coins: 100000
+      gems: 200
+
+# Pet egg types
+eggs:
+  common:
+    name: 'Common Egg'
+    cost:
+      coins: 1000
+      gems: 0
+    chances:
+      common: 80
+      uncommon: 15
+      rare: 4
+      epic: 0.9
+      legendary: 0.1
+      mythical: 0
+      
+  rare:
+    name: 'Rare Egg'
+    cost:
+      coins: 7500
+      gems: 15
+    chances:
+      common: 0
+      uncommon: 75
+      rare: 20
+      epic: 4
+      legendary: 1
+      mythical: 0
+      
+  legendary:
+    name: 'Legendary Egg'
+    cost:
+      coins: 50000
+      gems: 100
+    chances:
+      common: 0
+      uncommon: 0
+      rare: 70
+      epic: 25
+      legendary: 5
+      mythical: 0
+      
+  mythical:
+    name: 'Mythical Egg'
+    cost:
+      coins: 0
+      gems: 500
+    chances:
+      common: 0
+      uncommon: 0
+      rare: 0
+      epic: 75
+      legendary: 20
+      mythical: 5
+
+# Worlds configuration
+worlds:
+  starter:
+    name: 'Starter World'
+    enabled: true
+    description: 'Where your bubble adventure begins!'
+    unlock-requirements:
+      coins: 0
+      bubble-size: 0
+      required-pets: 0
+      
+  candyland:
+    name: 'Candy Land'
+    enabled: true
+    description: 'A sweet world with candy resources'
+    unlock-requirements:
+      coins: 10000
+      bubble-size: 10
+      required-pets: 5
+      
+  space:
+    name: 'Space Station'
+    enabled: true
+    description: 'A futuristic area with special materials'
+    unlock-requirements:
+      coins: 50000
+      bubble-size: 20
+      required-pets: 10
+      
+  atlantis:
+    name: 'Atlantis'
+    enabled: true
+    description: 'Underwater realm with unique pet eggs'
+    unlock-requirements:
+      coins: 100000
+      bubble-size: 30
+      required-pets: 15
+      
+  void:
+    name: 'Void World'
+    enabled: true
+    description: 'End-game area with powerful resources'
+    unlock-requirements:
+      coins: 500000
+      bubble-size: 50
+      required-pets: 25
+
+# Messages
+messages:
+  prefix: '&b&lBubbleGum &8» &r'
+  bubble:
+    blow-start: '&aYou started blowing a bubble!'
+    blow-cancel: '&cYou stopped blowing your bubble.'
+    blow-complete: '&aYou blew a bubble of size &e{size}&a!'
+    sell: '&aYou sold your bubbles for &e{coins} coins&a!'
+    backpack-full: '&cYour bubble backpack is full!'
+  pet:
+    hatched: '&aYou hatched a &e{rarity} {pet}&a!'
+    equip: '&aYou equipped &e{pet}&a!'
+    unequip: '&aYou unequipped &e{pet}&a!'
+    level-up: '&aYour &e{pet}&a leveled up to level &e{level}&a!'
+  world:
+    teleport: '&aYou have been teleported to &e{world}&a!'
+    locked: '&cYou have not unlocked &e{world}&c yet!'
+  shop:
+    purchase: '&aYou purchased &e{item}&a for &e{price}&a!'
+    insufficient-funds: '&cYou don\'t have enough {currency} to buy this!'
+  error:
+    unknown-command: '&cUnknown command. Use /bubblegum help for a list of commands.'
+    no-permission: '&cYou don\'t have permission to use this command.'
+    player-only: '&cThis command can only be used by players.'
