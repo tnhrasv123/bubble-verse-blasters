@@ -6,6 +6,7 @@ settings:
   debug-mode: false
   language: 'en'
   save-interval: 300 # In seconds
+  max-equipped-pets: 3
   database:
     type: 'yaml' # 'yaml' or 'mysql'
     mysql:
@@ -38,6 +39,45 @@ bubbles:
     particle: 'CLOUD'
     color: 'WHITE'
     effect-radius: 1.0
+
+# Pet types configuration
+pet-types:
+  common:
+    - "Dog"
+    - "Cat"
+    - "Rabbit" 
+    - "Mouse"
+    - "Chicken"
+  uncommon:
+    - "Fox"
+    - "Wolf"
+    - "Panda"
+    - "Parrot"
+    - "Turtle"
+  rare:
+    - "Dragon"
+    - "Phoenix"
+    - "Unicorn"
+    - "Griffin"
+    - "Hydra"
+  epic:
+    - "Robot"
+    - "Alien"
+    - "Ghost"
+    - "Demon"
+    - "Angel"
+  legendary:
+    - "Titan"
+    - "Kraken"
+    - "Leviathan"
+    - "Behemoth"
+    - "Chimera"
+  mythical:
+    - "Chronos"
+    - "Zeus"
+    - "Poseidon"
+    - "Hades"
+    - "Athena"
 
 # Gum types
 gum-types:
@@ -86,36 +126,8 @@ gum-types:
       gems: 100
     color: 'DARK_PURPLE'
 
-# Backpack upgrades
-backpacks:
-  basic:
-    name: 'Basic Backpack'
-    capacity: 10
-    cost:
-      coins: 0
-      gems: 0
+# ... keep existing code (backpacks section)
     
-  advanced:
-    name: 'Advanced Backpack'
-    capacity: 50
-    cost:
-      coins: 5000
-      gems: 0
-      
-  mega:
-    name: 'Mega Backpack'
-    capacity: 250
-    cost:
-      coins: 25000
-      gems: 50
-      
-  infinity:
-    name: 'Infinity Backpack'
-    capacity: 1000
-    cost:
-      coins: 100000
-      gems: 200
-
 # Pet egg types
 eggs:
   common:
@@ -170,52 +182,7 @@ eggs:
       legendary: 20
       mythical: 5
 
-# Worlds configuration
-worlds:
-  starter:
-    name: 'Starter World'
-    enabled: true
-    description: 'Where your bubble adventure begins!'
-    unlock-requirements:
-      coins: 0
-      bubble-size: 0
-      required-pets: 0
-      
-  candyland:
-    name: 'Candy Land'
-    enabled: true
-    description: 'A sweet world with candy resources'
-    unlock-requirements:
-      coins: 10000
-      bubble-size: 10
-      required-pets: 5
-      
-  space:
-    name: 'Space Station'
-    enabled: true
-    description: 'A futuristic area with special materials'
-    unlock-requirements:
-      coins: 50000
-      bubble-size: 20
-      required-pets: 10
-      
-  atlantis:
-    name: 'Atlantis'
-    enabled: true
-    description: 'Underwater realm with unique pet eggs'
-    unlock-requirements:
-      coins: 100000
-      bubble-size: 30
-      required-pets: 15
-      
-  void:
-    name: 'Void World'
-    enabled: true
-    description: 'End-game area with powerful resources'
-    unlock-requirements:
-      coins: 500000
-      bubble-size: 50
-      required-pets: 25
+# ... keep existing code (worlds configuration section)
 
 # Messages
 messages:
