@@ -4,11 +4,11 @@ package com.bubblegum.managers;
 import com.bubblegum.BubbleGumSimulator;
 import com.bubblegum.models.BGPlayer;
 import com.bubblegum.models.Bubble;
-import com.bubblegum.utils.ColorUtils;
+import com.bubblegum.rendering.BubbleRenderer;
+import com.bubblegum.utils.BubbleCalculator;
 import com.bubblegum.utils.MessageUtils;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,11 +22,13 @@ public class BubbleManager {
     private final BubbleGumSimulator plugin;
     private final Map<UUID, BukkitTask> blowingTasks;
     private final Map<UUID, Double> currentBubbleSizes;
+    private final BubbleCalculator calculator;
     
     public BubbleManager(BubbleGumSimulator plugin) {
         this.plugin = plugin;
         this.blowingTasks = new HashMap<>();
         this.currentBubbleSizes = new HashMap<>();
+        this.calculator = new BubbleCalculator(plugin);
     }
     
     public void startBlowingBubble(Player player) {
@@ -41,22 +43,13 @@ public class BubbleManager {
         // Check if player has the required gum
         String gumType = bgPlayer.getCurrentGumType();
         
-        // Get config for the gum type
-        ConfigurationSection gumConfig = plugin.getConfig().getConfigurationSection("gum-types." + gumType);
-        if (gumConfig == null) {
-            player.sendMessage(MessageUtils.formatMessage("&cInvalid gum type!"));
+        if (!isValidGumType(gumType)) {
+            MessageUtils.sendMessage(player, "&cInvalid gum type!");
             return;
         }
         
-        // Get growth rate from config
-        double growthRate = gumConfig.getDouble("growth-rate", 1.0) * 0.05;
-        
-        // Apply pet multipliers
-        growthRate *= bgPlayer.getPetBubbleMultiplier();
-        
-        // Apply gum mastery multiplier
-        int masteryLevel = bgPlayer.getGumMastery(gumType);
-        growthRate *= (1 + masteryLevel * 0.02);
+        // Calculate growth rate for this bubble
+        double growthRate = calculator.calculateGrowthRate(bgPlayer, gumType);
         
         // Start growing the bubble
         currentBubbleSizes.put(uuid, 0.0);
@@ -75,10 +68,7 @@ public class BubbleManager {
                 size += growthRate;
                 
                 // Check maximum size
-                double maxSize = gumConfig.getDouble("max-size", 10.0);
-                
-                // Apply pet multipliers to max size
-                maxSize *= bgPlayer.getPetBubbleMultiplier();
+                double maxSize = calculator.calculateMaxSize(bgPlayer, gumType);
                 
                 if (size > maxSize) {
                     size = maxSize;
@@ -88,7 +78,7 @@ public class BubbleManager {
                 bgPlayer.setCurrentBubbleSize(size);
                 
                 // Display bubble
-                displayBubble(player, size, gumType);
+                BubbleRenderer.displayBubble(player, size, gumType);
                 
                 // If reached max size, finish blowing
                 if (size >= maxSize) {
@@ -166,7 +156,7 @@ public class BubbleManager {
             return 0;
         }
         
-        long totalValue = calculateBubblesSellValue(bgPlayer);
+        long totalValue = calculator.calculateBubblesSellValue(bgPlayer);
         
         // Add coins to player
         bgPlayer.addCoins(totalValue);
@@ -182,46 +172,8 @@ public class BubbleManager {
         return totalValue;
     }
     
-    public long calculateBubblesSellValue(BGPlayer bgPlayer) {
-        long totalValue = 0;
-        
-        for (Bubble bubble : bgPlayer.getBackpack().getBubbles()) {
-            String gumType = bubble.getGumType();
-            double size = bubble.getSize();
-            double baseValue = plugin.getConfig().getDouble("bubbles.base-value", 5);
-            
-            // Get value multiplier for the gum type
-            ConfigurationSection gumConfig = plugin.getConfig().getConfigurationSection("gum-types." + gumType);
-            double valueMultiplier = 1.0;
-            if (gumConfig != null) {
-                valueMultiplier = gumConfig.getDouble("value-multiplier", 1.0);
-            }
-            
-            // Apply gum mastery multiplier
-            int masteryLevel = bgPlayer.getGumMastery(gumType);
-            valueMultiplier *= (1 + masteryLevel * 0.01);
-            
-            // Apply pet multipliers
-            valueMultiplier *= bgPlayer.getPetBubbleMultiplier();
-            
-            // Calculate value
-            long value = (long) (size * baseValue * valueMultiplier);
-            totalValue += value;
-        }
-        
-        return totalValue;
-    }
-    
-    private void displayBubble(Player player, double size, String gumType) {
-        // Get bubble color
-        String colorStr = plugin.getConfig().getString("gum-types." + gumType + ".color", "WHITE");
-        Particle.DustOptions dustOptions = ColorUtils.getDustOptions(colorStr, (float) (size * 0.2));
-        
-        // Calculate display position (in front of player's face)
-        Location loc = player.getEyeLocation().add(player.getLocation().getDirection().multiply(0.5));
-        
-        // Spawn particles
-        player.getWorld().spawnParticle(Particle.REDSTONE, loc, 10, size * 0.05, size * 0.05, size * 0.05, 0, dustOptions);
+    private boolean isValidGumType(String gumType) {
+        return plugin.getConfig().getConfigurationSection("gum-types." + gumType) != null;
     }
     
     private void cancelTask(UUID uuid) {
@@ -233,5 +185,9 @@ public class BubbleManager {
     
     public boolean isBlowingBubble(Player player) {
         return blowingTasks.containsKey(player.getUniqueId());
+    }
+    
+    public long calculateBubblesSellValue(BGPlayer bgPlayer) {
+        return calculator.calculateBubblesSellValue(bgPlayer);
     }
 }
