@@ -1,30 +1,37 @@
 
 package com.bubblegum.models;
 
+import com.bubblegum.models.pets.PetExperience;
+import com.bubblegum.models.pets.PetRarity;
+
 import java.util.UUID;
 
 public class Pet {
     
     private final String id;
     private final String type;
-    private final String rarity;
-    private int level;
-    private int experience;
+    private final PetRarity rarity;
+    private final PetExperience experience;
     
-    public Pet(String type, String rarity) {
+    public Pet(String type, String rarityName) {
         this.id = UUID.randomUUID().toString();
         this.type = type;
-        this.rarity = rarity;
-        this.level = 1;
-        this.experience = 0;
+        this.rarity = PetRarity.fromString(rarityName);
+        this.experience = new PetExperience();
     }
     
-    public Pet(String id, String type, String rarity) {
+    public Pet(String id, String type, String rarityName) {
         this.id = id;
         this.type = type;
-        this.rarity = rarity;
-        this.level = 1;
-        this.experience = 0;
+        this.rarity = PetRarity.fromString(rarityName);
+        this.experience = new PetExperience();
+    }
+    
+    public Pet(String id, String type, String rarityName, int level, int exp) {
+        this.id = id;
+        this.type = type;
+        this.rarity = PetRarity.fromString(rarityName);
+        this.experience = new PetExperience(level, exp);
     }
     
     public String getId() {
@@ -36,67 +43,52 @@ public class Pet {
     }
     
     public String getRarity() {
-        return rarity;
+        return rarity.getName();
     }
     
     public int getLevel() {
-        return level;
+        return experience.getLevel();
     }
     
     public void setLevel(int level) {
-        this.level = level;
+        experience.setLevel(level);
     }
     
     public int getExperience() {
-        return experience;
+        return experience.getExperience();
     }
     
-    public void setExperience(int experience) {
-        this.experience = experience;
+    public void setExperience(int exp) {
+        experience.setExperience(exp);
     }
     
     public void addExperience(int amount) {
-        this.experience += amount;
-        checkLevelUp();
+        experience.addExperience(amount);
     }
     
-    private void checkLevelUp() {
-        int requiredExp = level * 50;
-        if (experience >= requiredExp) {
-            experience -= requiredExp;
-            level++;
-            checkLevelUp();
-        }
+    /**
+     * Get the required experience for the current level
+     * @return Required experience for current level
+     */
+    public int getRequiredExperience() {
+        return experience.getRequiredExperience();
     }
     
+    /**
+     * Get the multiplier for bubble production based on pet rarity and level
+     * @return The bubble multiplier value
+     */
     public double getBubbleMultiplier() {
-        double baseMultiplier = getRarityValue() * 0.05;
-        return baseMultiplier + (level - 1) * 0.01;
+        double baseMultiplier = rarity.getBubbleMultiplierBase();
+        return baseMultiplier + (getLevel() - 1) * 0.01;
     }
     
+    /**
+     * Get the multiplier for luck based on pet rarity and level
+     * @return The luck multiplier value
+     */
     public double getLuckMultiplier() {
-        double baseMultiplier = getRarityValue() * 0.02;
-        return baseMultiplier + (level - 1) * 0.005;
-    }
-    
-    private double getRarityValue() {
-        switch (rarity.toLowerCase()) {
-            case "common":
-                return 1.0;
-            case "uncommon":
-                return 1.5;
-            case "rare":
-                return 2.0;
-            case "epic":
-                return 3.0;
-            case "legendary":
-                return 5.0;
-            case "mythical":
-                return 10.0;
-            case "infinity":
-                return 20.0;
-            default:
-                return 1.0;
-        }
+        double baseMultiplier = rarity.getLuckMultiplierBase();
+        return baseMultiplier + (getLevel() - 1) * 0.005;
     }
 }
